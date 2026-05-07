@@ -64,7 +64,9 @@ project-folder/
 │
 └── README.md
 
-# Author
+---
 
-Syed Maseeha Kausar
+## Author
+
+**Syed Maseeha Kausar**
 
