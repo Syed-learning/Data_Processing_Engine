@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    border: 1px solid rgb(0, 0, 0);
+    padding: 8px;
+}
+th {
+    background-color: #f2f2f2;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Dataset Summary</h2>
+
+<p><b>Rows:</b> {{ rows }}</p>
+<p><b>Columns:</b> {{ cols }}</p>
+
+<h3>Column Names</h3>
+<ul>
+    {% for col in columns %}
+        <li>{{ col }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Missing Values</h3>
+<ul>
+    {% for key, value in missing.items() %}
+        <li>{{ key }} : {{ value }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Statistics</h3>
+<pre>{{ stats }}</pre>
+
+<h3>Data Preview</h3>
+{{ table | safe }}
+
+<hr>
+<h2>Filter Data</h2>
+
+<!-- Step 1: Select Column -->
+<form action="/get_values" method="post">
+    <input type="hidden" name="file" value="{{ filename }}">
+
+    <label>Select Column:</label>
+    <select name="column">
+        {% for col in columns %}
+            <option value="{{ col }}"
+                {% if selected_column == col %} selected {% endif %}>
+                {{ col }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Load Values</button>
+</form>
+
+<br>
+
+<!-- Step 2: Show values only after column is selected -->
+{% if values %}
+
+<form action="/filter" method="post">
+    <input type="hidden" name="file" value="{{ filename }}">
+    <input type="hidden" name="column" value="{{ selected_column }}">
+
+    <label>Select Value:</label>
+    <select name="value">
+        {% for val in values %}
+            <option value="{{ val }}">{{ val }}</option>
+        {% endfor %}
+    </select>
+    
+    <br><br>
+
+    <label>Rows:</label>
+    <input type="number" name="limit" value="10">
+
+    <br><br>
+    <button type="submit">Apply Filter</button>
+</form>
+
+<hr>
+
+{% if filtered_table %}
+     <h3>Filtered Results</h3>
+     {{ filtered_table | safe}}
+{% endif %}
+
+{% endif %}
+
+
+</body>
+</html>
